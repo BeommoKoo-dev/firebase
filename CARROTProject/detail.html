@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detail-CarrotMarketProject</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+  <link href="main.css" rel="stylesheet">
+
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">CarrotMarketProject</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Features</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Pricing</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled">Disabled</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+  
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-storage.js"></script>
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script>
+  
+  <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+
+
+  <div class="container">
+    상세페이지임 
+    <div class="detail-pic my-4" style="background-image: url('https://placeimg.com/640/380/tech');"></div>
+    <div>
+      <h5 class = "uploader">default-uploader</h5>
+      <hr>
+      <h5 class="title">default-title</h5>
+      <p class="date">default-date</p>
+      <p class="price">default-price</p>
+    </div>
+    <button id = "edit">수정</button>
+    <button id = "chatting">채팅</button>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-storage.js"></script>
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script>
+  
+  <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+
+    
+  <script>  
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyAXjO0k2QnPVpLDS3MgXX1XegFd7GaaeQg",
+        authDomain: "carrotproject-a67c6.firebaseapp.com",
+        databaseURL: "https://carrotproject-a67c6-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "carrotproject-a67c6",
+        storageBucket: "carrotproject-a67c6.appspot.com",
+        messagingSenderId: "29898487583",
+        appId: "1:29898487583:web:e0b62f6b8e062855a1e22a"
+    };
+    
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig); 
+    
+  </script>
+
+  <script>
+
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+
+    var 내uid = JSON.parse(localStorage.getItem('user')).uid;
+    // db.collection()에서 끌어오기 위해 일단 변수만 선언.
+    var 판매자uid;
+    var 상품명;
+
+
+    $('#chatting').click(function() {
+      console.log('chattingroom enter!');
+
+      // db.collection('chatroom').where('who', 'array-contains', '내uid').get().then((result) => {
+      //       result.forEach((a) => {
+      //           console.log(a.data());
+      //       })
+      //   })
+      // 이미 채팅방 있으면 추가만.
+      
+      // var check = firebase.database().ref('chatroom');
+      // check.once('product', function(snapshot) {
+      //   // 중복검사
+      //   if(snapshot.val().hasOwnProperty(상품명)) {
+      //     who.push
+      //   }
+
+      var 새로운채팅방 = {
+        who : [내uid, 판매자uid],
+        product : 상품명,
+        date : new Date()
+      };
+      db.collection('chatroom').add(새로운채팅방);
+      
+      window.location.href = 'chat.html';
+    })
+
+
+    // query-string을 object로 변환해주는 method.
+    var 쿼리스트링 = new URLSearchParams(window.location.search)
+
+    // query-string에 해당하는 id를 db에서 따와서, result 출력.
+    db.collection('product').doc(쿼리스트링.get('id')).get().then((result) => {
+      console.log(result.data());
+
+      판매자uid = result.data().uid;
+      상품명 = result.data().제목;
+      $('.author').html('올린사람 : ' + result.data().이름);
+      $('.title').html(result.data().제목);
+      $('.price').html(result.data().가격);
+      $('.detail-pic').css('background-image', 'url(${result.data().이미지})' );
+    })
+
+    $('#edit').click(function() {
+      window.location.href = 'edit.html?id=' + 쿼리스트링.get('id');
+    })
+
+      
+  </script>
+
+  <script>
+
+
+    // $('#chatting').click(function() {
+    //   firebase.auth().onAuthStateChanged((user) => {
+    //     if(user) {
+    //         // 다음부터 빠르게 접근을 위해, localStorage에 저장. 문자열만 저장 가능.
+    //         localStorage.setItem('user', JSON.stringify(user))
+
+    //         $('#userName').html(JSON.parse(뺀거).displayName);
+    //         console.log(user);
+    //         console.log(user.displayName);
+    //     }
+    // })
+
+
+  </script>
+
+    
+</body>
+</html>

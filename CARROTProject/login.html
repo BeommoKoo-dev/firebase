@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log-inCarrotMarketProject</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+  <link href="main.css" rel="stylesheet">
+
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">CarrotMarketProject</a>
+      <span class = "ms-auto mx-2" id = " ">Not-Log-In</span>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Features</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Pricing</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled">Disabled</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+  
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-storage.js"></script>
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script>
+  
+  <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+
+  <script>  
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyAXjO0k2QnPVpLDS3MgXX1XegFd7GaaeQg",
+      authDomain: "carrotproject-a67c6.firebaseapp.com",
+      databaseURL: "https://carrotproject-a67c6-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "carrotproject-a67c6",
+      storageBucket: "carrotproject-a67c6.appspot.com",
+      messagingSenderId: "29898487583",
+      appId: "1:29898487583:web:e0b62f6b8e062855a1e22a"
+    };
+    
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig); 
+
+   </script>
+  
+    <div class="container mt-3">
+        <div class="mb-3">
+        <input type="text" class="form-control" placeholder="name" id="name-new">
+        </div>
+        <div class="mb-3">
+        <input type="email" class="form-control" placeholder="email" id="email-new">
+        </div>
+        <div class="mb-3">
+        <input type="password" class="form-control" placeholder="pw" id="pw-new">
+        </div>
+        <button type="submit" class="btn btn-primary" id="register">가입하기</button>
+    </div>
+
+    <div class="container mt-3">
+        <div class="mb-3">
+            <input type="email" class="form-control" placeholder="email" id="email">
+        </div>
+        <div class="mb-3">
+            <input type="password" class="form-control" placeholder="pw" id="pw">
+        </div>
+        <button type="submit" class="btn btn-primary" id="login">로그인하기</button>
+        <button type="submit" class="btn btn-primary" id="logout">로그아웃</button>
+
+    </div>
+
+
+  <script>
+
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+    
+
+
+    var 뺀거 = localStorage.getItem('user');
+    firebase.auth().onAuthStateChanged((user) => {
+      if(user) {
+          // 다음부터 빠르게 접근을 위해, localStorage에 저장. 문자열만 저장 가능.
+          localStorage.setItem('user', JSON.stringify(user));
+
+          $('#userName').html(JSON.parse(뺀거).displayName);
+          console.log(user);
+          console.log(user.displayName);
+      }
+    })
+
+    // 유저정보 확인
+
+
+    $('#logout').click(function() {
+        var user = localStorage.getItem('user');
+        alert('name' + user.displayName + ' logOut complete!!');
+        firebase.auth().signOut();
+        // localStorage.removeItem('user');
+    })
+
+    $('#login').click(function() {
+        var 이메일 = $('#email').val();
+        var 패스워드 = $('#pw').val();        
+
+        firebase.auth().signInWithEmailAndPassword(이메일, 패스워드).then((result) => {
+            console.log(result.user);
+            alert('name' + result.user.displayName + 'logIn complete!!');
+        })
+        // localStorage.setItem을 JSON으로 했기 때문에, 다시 변환하여 출력해주어야 함.
+        // window.location.href = 'index.html';
+    })
+
+
+
+    $('#register').click(function() {
+
+      var 이메일 = $('#email-new').val();
+      var 패스워드 = $('#pw-new').val();
+      var 이름 = $('#name-new').val();
+        
+      // log-in 담당 method.
+      firebase.auth().createUserWithEmailAndPassword(이메일, 패스워드).then((result) => {
+
+        var 유저정보 = {
+          name : 이름,
+          email : 이메일
+        };
+
+        // document name을 임의가 아난, 원하는 이름으로 생성하기 위해 doc().method 사용
+        db.collection('user').doc(result.user.uid).set(유저정보).then((result2) => {
+          console.log(result2);
+        })
+
+
+        console.log(result);
+        // hh(result.user)에서 가장 중요한 것은 uid!
+        console.log(result.user);
+
+        // 이름 update. method 이용해야 함.
+        result.user.updateProfile( {displayName : 이름} ).then(() => {
+            alert('name ' + 이름 + " Upload complete!!");
+        });
+      }).catch()
+    })
+
+
+
+  </script>
+
+</body>
+</html>
